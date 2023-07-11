@@ -5,7 +5,7 @@ import logo from '../assest/logo.svg';
 import {ToastContainer,toast} from 'react-toastify';
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css"
-import { registerRoute } from '../utils/APIRoutes';
+import  {registerRoute}  from '../utils/APIRoutes';
 function Register() {
   const navigate = useNavigate();
   const [values,setValues] = useState({
