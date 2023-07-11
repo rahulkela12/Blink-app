@@ -4,8 +4,8 @@ import {Link, useNavigate} from "react-router-dom";
 import logo from '../assest/logo.svg';
 import {ToastContainer,toast} from 'react-toastify';
 import axios from "axios";
-import "react-toastify/dist/ReactToastify.css";
-import {loginRoute} from "../utils/APIRoutes";
+import "react-toastify/dist/ReactToastify.css"
+import  {loginRoute}  from '../utils/APIRoutes';
 function Login() {
   const navigate = useNavigate();
   const [values,setValues] = useState({
@@ -19,7 +19,11 @@ function Login() {
     draggable:true,
     theme:'dark'
   }
-  console.log("abc");
+  useEffect(()=> {
+    if(localStorage.getItem('chat-app-user')){
+      navigate('/')
+    }
+  },[])
  const handelSubmit = async (event)=>{
   event.preventDefault();
   if(handelValidation()){
@@ -33,18 +37,18 @@ function Login() {
     }
     if(data.status === true){
       localStorage.setItem('chat-app-user',JSON.stringify(data.user));
-    }
-    navigate("/");     
+      navigate("/"); 
+    }    
   }
  }
  const handelValidation =() =>{
   const {password,username} = values;
-  if(password  === ""){
-    toast.error("Email and Password are required",toastOptions);
+  if(password === ""){
+     toast.error("Username ans Password is required",toastOptions);
     return false;
     }
-  else if(username.length === ""){
-    toast.error("Email and Password are required",toastOptions);
+  else if(username === ""){
+    toast.error("Username ans Password is required",toastOptions);
     return false;
   }
     return true;  
@@ -62,8 +66,8 @@ function Login() {
       </div>
       <input type='text' placeholder='Username' name='username' onChange={(e)=>handleChange(e)} min = "3"/>
       <input type='password' placeholder='Password' name='password' onChange={(e)=>handleChange(e)}/>
-      <button type='submit'>Login User</button>
-      <span>Do not have an account? <Link to="/Register">register</Link></span>
+      <button type='submit'>Login</button>
+      <span>Do not have a account ? <Link to="/register">Register</Link></span>
       </form>
     </FormContainer>
     <ToastContainer />
@@ -141,4 +145,3 @@ span{
 `;
 
 export default Login;
-

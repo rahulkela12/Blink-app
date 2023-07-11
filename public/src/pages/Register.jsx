@@ -21,7 +21,11 @@ function Register() {
     draggable:true,
     theme:'dark'
   }
-  console.log("abc");
+  useEffect(()=> {
+    if(localStorage.getItem('chat-app-user')){
+      navigate('/')
+    }
+  },[])
  const handelSubmit = async (event)=>{
   event.preventDefault();
   if(handelValidation()){
@@ -36,8 +40,8 @@ function Register() {
     }
     if(data.status === true){
       localStorage.setItem('chat-app-user',JSON.stringify(data.user));
-    }
-    navigate("/");     
+      navigate("/"); 
+    }    
   }
  }
  const handelValidation =() =>{
