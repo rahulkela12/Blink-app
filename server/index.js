@@ -7,7 +7,6 @@ const userRoutes =require("./routes/userRoutes");
 const app = express();
 require("dotenv").config();
 
-
 //const server = app.listen();
 
 app.use(cors());
