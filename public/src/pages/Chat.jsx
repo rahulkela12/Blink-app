@@ -38,7 +38,6 @@ function Chat() {
   },[currentUser]);
   const handleChatChange = (chat) => 
     {setCurrentChat = {chat};}
-    console.log(currentChat);
   return (
     <Container>
       <div className='container'>
@@ -54,6 +53,7 @@ function Chat() {
         currentUser = {currentUser}
          /> : (<ChatContainer 
           currentChat = {currentChat}
+          currentUser = {currentUser}
          />)
         }
       </div>

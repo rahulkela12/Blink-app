@@ -4,7 +4,7 @@ import Picker from 'emoji-picker-react';
 import {IoMdSend} from 'react-icons/io';
 import {BsEmojiSmileFill} from 'react-icons/bs';
 
-export default function ChatInput() {
+export default function ChatInput({handleSendMsg}) {
     const [showEmojiPicker,setShowEmojiPicker] = useState(false);
     const[msg,setMsg] = useState("");
 
@@ -17,7 +17,15 @@ export default function ChatInput() {
     message += event.emoji;
     setMsg(message);
 }
-console.log()
+
+const sendChat = (event)=>{
+    event.preventDefault();
+    if(msg.length > 0){
+        handleSendMsg(msg);
+        setMsg('');
+    }
+}
+
     return (
   <Container>
     <div className='button-container'>
@@ -26,7 +34,7 @@ console.log()
             {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick}/>}
         </div>
     </div>
-    <form className='input-container'>
+    <form className='input-container' onSubmit={(e) => {sendChat(e)}}>
         <input type='text' placeholder='Type your message here' value={msg} onChange={(e) => setMsg(e.target.value)}/>
         <button className='submit'>
             <IoMdSend/>
@@ -62,7 +70,14 @@ const Container = styled.div`{
             box-shadow: 0 5px 10px;
             color: #9a86f3;
             border-color: #9186f3;
-            .epr-category-nav{
+            .epr-emoji-scroll-wrapper::-webkit-scrollbar{
+            background-color:#880420;
+            width:5px;
+            &-thumb{
+                background-color: #9a86f3;
+            }
+            }
+            .epr-category{
                 button{
                     filter:contrast(0);
                 }
@@ -85,9 +100,7 @@ const Container = styled.div`{
         gap:2rem;
         background-color: #ffffff34;
         input{
-            padding-top:0.5rem;
             width: 90%;
-            height: 100%;
             background-color: transparent;
             color: orange;
             border: none;
