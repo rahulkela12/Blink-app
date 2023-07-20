@@ -13,6 +13,7 @@ function Chat() {
   const[currentUser,setCurrentUser] = useState(undefined);
   let[currentChat,setCurrentChat] = useState(undefined);
   const [isLoaded,setIsLoaded] = useState(false);
+
   useEffect(() =>{
     const callback = async()=> {if(!localStorage.getItem('chat-app-user')){
       navigate('/login');
@@ -37,6 +38,7 @@ function Chat() {
   },[currentUser]);
   const handleChatChange = (chat) => 
     {setCurrentChat = {chat};}
+    console.log(currentChat);
   return (
     <Container>
       <div className='container'>
@@ -51,7 +53,7 @@ function Chat() {
           <Welcome 
         currentUser = {currentUser}
          /> : (<ChatContainer 
-          currentUser = {currentUser}
+          currentChat = {currentChat}
          />)
         }
       </div>
