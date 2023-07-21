@@ -1,15 +1,15 @@
-import React ,{useState,useEffect} from 'react';
+import React ,{useState,useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import Logout from './Logout';
 import ChatInput from './ChatInput';
-import Messages from './Messages';
 import axios from 'axios';
 import {getAllMessagesRoute, sendMessageRoute} from "../utils/APIRoutes"
-export default function ChatContainer({currentChat,currentUser}) {
+import {v4 as uuidv4} from "uuid";
 
+export default function ChatContainer({currentChat,currentUser,socket}) {
 const[messages,setMessages] = useState([]);
-
-
+const[arrivalMessage,SetArrivalMessage] = useState(null);
+const scrollRef = useRef();
 
  useEffect(()=>{
   const callback = async()=>{
@@ -28,8 +28,34 @@ const[messages,setMessages] = useState([]);
     from:currentUser._id,
     to:currentChat._id,
     message:msg,
-   })
- }
+   });
+ socket.current.emit("send-msg",{
+  to:currentChat._id,
+  from:currentUser._id,
+  message:msg,
+ });
+
+const msgs= [...messages];
+msgs.push({fromSelf:true,message:msg});
+setMessages(msgs);
+ };
+
+ useEffect(()=>{
+  if(socket.current){
+    socket.current.on("msg-recieve",(msg)=>{
+      SetArrivalMessage({fromSelf:false,message:msg});
+    });
+  }
+ },[])
+
+useEffect(()=>{
+arrivalMessage && setMessages((prev)=>[...prev,arrivalMessage]);
+},[arrivalMessage]);
+
+useEffect(()=>{
+  scrollRef.current?.scrollIntoView({behaviour:"smooth"});
+},[messages]);
+
   return (<>
     {
     currentChat && 
@@ -50,12 +76,14 @@ const[messages,setMessages] = useState([]);
           {
             messages.map ((message) => {
              return(
+               <div ref={scrollRef} key={uuidv4}>
                  <div className={`message ${message.fromSelf ? "sended" : "recived"}`}>
                   <div className='content'>
                     <p>
                       {message.message}
                     </p>
                   </div>
+                 </div>
                  </div>
              )
           })
@@ -106,6 +134,14 @@ display: flex;
 flex-direction: column;
 gap: 1rem;
 overflow: auto;
+&::-webkit-scrollbar{
+  width:0.2rem;
+  &-thumb{
+    background-color:#ffffff39;
+    width:0.1rem;
+    border-radius:1rem;
+  }
+}
 .message{
     display: flex;
     align-items: center;
@@ -127,7 +163,7 @@ background-color: #4f04ff;
 .recived{
     justify-content: flex-start;
      .content{
-    background-color: aqua;
+    background-color: green;
      }
 }
 }
